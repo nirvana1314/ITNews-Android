@@ -7,17 +7,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.lst.news.fragment.ListModel;
 import com.lst.news.utils.Const;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ClipPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,16 +103,9 @@ public class MainActivity extends AppCompatActivity {
     private void initIndicator() {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(mHomePagerAdapter);
-
         MagicIndicator magicIndicator = (MagicIndicator) findViewById(R.id.magic_indicator1);
-        magicIndicator.setBackgroundColor(Color.parseColor("#ffffff"));
         CommonNavigator commonNavigator = new CommonNavigator(this);
-        commonNavigator.setSkimOver(true);
-        int padding = 20;
-        commonNavigator.setRightPadding(padding);
-        commonNavigator.setLeftPadding(padding);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
-
             @Override
             public int getCount() {
                 return mDataList == null ? 0 : mDataList.size();
@@ -116,26 +113,35 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
-                ClipPagerTitleView clipPagerTitleView = new ClipPagerTitleView(context);
-
-                clipPagerTitleView.setText(mDataList.get(index).getCate_name());
-                clipPagerTitleView.setTextColor(Color.parseColor("#333333"));
-                clipPagerTitleView.setClipColor(Color.parseColor("#06a3F9"));
-                clipPagerTitleView.setOnClickListener(new View.OnClickListener() {
+                SimplePagerTitleView simplePagerTitleView = new ColorTransitionPagerTitleView(context);
+                simplePagerTitleView.setText(mDataList.get(index).getCate_name());
+                simplePagerTitleView.setNormalColor(Color.parseColor("#333333"));
+                simplePagerTitleView.setSelectedColor(Color.parseColor("#06a3F9"));
+                simplePagerTitleView.setTextSize(17);
+                simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mViewPager.setCurrentItem(index);
                     }
                 });
-                return clipPagerTitleView;
+                return simplePagerTitleView;
             }
 
             @Override
             public IPagerIndicator getIndicator(Context context) {
-                return null;
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setColors(Color.parseColor("#06a3F9"));
+                return indicator;
             }
         });
+
         magicIndicator.setNavigator(commonNavigator);
+        LinearLayout titleContainer = commonNavigator.getTitleContainer(); // must after setNavigator
+        titleContainer.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        titleContainer.setDividerPadding(UIUtil.dip2px(this, 10));
+        titleContainer.setDividerDrawable(getResources().getDrawable(R.drawable.simple_splitter));
         ViewPagerHelper.bind(magicIndicator, mViewPager);
+
+
     }
 }
