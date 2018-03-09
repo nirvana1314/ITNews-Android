@@ -130,10 +130,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public IPagerIndicator getIndicator(Context context) {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
                 indicator.setColors(Color.parseColor("#06a3F9"));
                 return indicator;
             }
         });
+        commonNavigator.setAdjustMode(true);
 
         magicIndicator.setNavigator(commonNavigator);
         LinearLayout titleContainer = commonNavigator.getTitleContainer(); // must after setNavigator

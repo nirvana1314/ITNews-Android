@@ -3,10 +3,13 @@ package com.lst.news;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 
 
 /**
@@ -23,7 +26,7 @@ public class WebViewActivity extends Activity {
 
         setContentView(R.layout.activity_webview);
 
-        mWebview = (WebView) findViewById(R.id.webview);
+        mWebview = findViewById(R.id.webview);
 
         mWebview.getSettings().setJavaScriptEnabled(true);
         mWebview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
@@ -41,6 +44,19 @@ public class WebViewActivity extends Activity {
                 return true;
             }
         });
+
+        RelativeLayout rl = findViewById(R.id.backBtn);
+        rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("lst", "onBackPressed");
+                onBackPressed();
+            }
+        });
+    }
+
+    public void backTransition() {
+        overridePendingTransition(0, R.anim.base_slide_right_out);
     }
 
     @Override
@@ -50,5 +66,6 @@ public class WebViewActivity extends Activity {
             return;
         }
         super.onBackPressed();
+        backTransition();
     }
 }
